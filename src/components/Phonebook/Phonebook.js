@@ -2,7 +2,7 @@ import React from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Form from "../Form/Form";
-import ContactList from "../ContactList/ContactList";
+import { ContactsPage } from "../ContactsPage";
 import Filter from "../Filter/Filter";
 
 const Phonebook = () => {
@@ -13,7 +13,7 @@ const Phonebook = () => {
       <Form />
       <h2>Contacts</h2>
       <Filter />
-      <ContactList />
+      <ContactsPage />
     </>
   );
 };

@@ -1,8 +1,7 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { deleteContact } from "../../redux/contacts-operations";
+import { useSelector } from "react-redux";
+import { getFilter } from "../../redux/contacts/selectors.js";
 import { MdDeleteForever } from "react-icons/md";
-import contactsOperations from "../../redux/contacts-operations.js";
 import {
   ContactBtn,
   ContactItem,
@@ -10,29 +9,24 @@ import {
   ContactText,
 } from "./Contact.styled.js";
 
-const getVisibleContacts = (allContacts, filter) => {
-  const normalizedFilter = filter.toLowerCase();
-
-  return allContacts.filter(({ name }) =>
-    name.toLowerCase().includes(normalizedFilter)
-  );
-};
-
-export default function ContactsList() {
-  const contacts = useSelector((state) =>
-    getVisibleContacts(state.contacts.items, state.contacts.filter)
-  );
-  const dispatch = useDispatch();
-  const onDeleteContact = (id) => dispatch(deleteContact(id));
+export default function ContactsList({ contacts, isFetching, onDelete }) {
+  const filter = useSelector(getFilter);
+  const getVisibleContacts = () => {
+    const normalizeFilter = filter.toLowerCase();
+    return contacts?.filter((contact) =>
+      contact.name.toLowerCase().includes(normalizeFilter)
+    );
+  };
+  const contactsNormalize = getVisibleContacts();
 
   return (
     <>
       <ContactList>
-        {contacts.map(({ id, name, number }) => (
-          <ContactItem key={id}>
+        {contactsNormalize.map(({ id, name, phone }) => (
+          <ContactItem key={id} id={id} name={name} number={phone}>
             <ContactText>{name}:</ContactText>
-            <ContactText>{number}</ContactText>
-            <ContactBtn onClick={() => onDeleteContact(id)}>
+            <ContactText>{phone}</ContactText>
+            <ContactBtn onClick={() => onDelete(id)}>
               <MdDeleteForever />
             </ContactBtn>
           </ContactItem>

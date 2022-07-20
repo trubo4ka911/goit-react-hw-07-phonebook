@@ -1,27 +1,39 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addContact } from "../../redux/contacts-operations";
+import {
+  useCreateContactMutation,
+  useFetchContactsQuery,
+} from "../../redux/contacts/contactsSlice";
 import { MdAccountBox, MdPhoneIphone } from "react-icons/md";
-import { nanoid } from "nanoid";
 import {
   PhonebookForm,
   PhonebookLabel,
   PhonebookField,
   PhonebookButton,
 } from "./Form.styled";
+import { toast } from "react-toastify";
 
 export default function Form() {
   const [contactInfo, setContactInfo] = useState({ name: "", number: "" });
-  const dispatch = useDispatch();
   const handleNameChange = (e) => {
     const { name, value } = e.target;
     setContactInfo({ ...contactInfo, [name]: value });
   };
 
+  const { data } = useFetchContactsQuery();
+  const [createContact] = useCreateContactMutation();
+
+  const onCheckNumberValue = (contactNumber) => {
+    if (data.some((contact) => contact.phone === contactNumber)) {
+      toast.info(`${contactInfo.number} is already in contacts!`);
+      return;
+    }
+    createContact(contactInfo);
+    toast.success("Contact has been added successfully!");
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(addContact(contactInfo));
-    // dispatch(addItem({ name, number }));
+    onCheckNumberValue(e.target.number.value);
     setContactInfo({ name: "", number: "" });
   };
   const { name, number } = contactInfo;
@@ -36,7 +48,6 @@ export default function Form() {
           value={name}
           onChange={handleNameChange}
           name="name"
-          id={nanoid(5)}
           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           required
@@ -50,7 +61,6 @@ export default function Form() {
           value={number}
           onChange={handleNameChange}
           name="number"
-          id={nanoid(5)}
           placeholder="Enter phone number"
           autoComplete="off"
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"

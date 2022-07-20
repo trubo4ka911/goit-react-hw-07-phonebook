@@ -14,16 +14,3 @@ export const FilterInput = styled.input`
   height: 42px;
   padding-left: 15px;
 `;
-export const FilterBtn = styled.button`
-  border: none;
-  outline: none;
-  background: transparent;
-  height: 42px;
-  width: 42px;
-  position: absolute;
-  top: 0;
-  right: 0;
-  cursor: pointer;
-  font-size: 16px;
-  color: #f9f0da;
-`;
