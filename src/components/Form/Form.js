@@ -22,9 +22,9 @@ export default function Form() {
   const { data } = useFetchContactsQuery();
   const [createContact] = useCreateContactMutation();
 
-  const onCheckNumberValue = (contactNumber) => {
-    if (data.some((contact) => contact.phone === contactNumber)) {
-      toast.info(`${contactInfo.number} is already in contacts!`);
+  const onCheckNameValue = (contactName) => {
+    if (data.some((contact) => contact.name === contactName)) {
+      toast.info(`${contactInfo.name} is already in contacts!`);
       return;
     }
     createContact(contactInfo);
@@ -33,7 +33,7 @@ export default function Form() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onCheckNumberValue(e.target.number.value);
+    onCheckNameValue(e.target.name.value);
     setContactInfo({ name: "", number: "" });
   };
   const { name, number } = contactInfo;
